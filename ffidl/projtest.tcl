@@ -184,7 +184,7 @@ puts [lmap p $x {fmt3 $p}]
 
 puts ""
 
-set mga2gda [proj_create_crs_to_crs epsg:28356 epsg:4939]
+set mga2gda [proj_create_crs_to_crs epsg:28356 epsg:4283]
 set gda2ahd [proj_create_crs_to_crs epsg:4939 epsg:9464]
 set x {502810 6964520 0}
 puts [lmap p $x {fmt3 $p}]
