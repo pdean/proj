@@ -196,4 +196,8 @@ set x [proj_inv $mga2gda $x]
 puts [lmap p $x {fmt3 $p}]
 
 
+set x {502810 6964520 50}
+puts [lmap p $x {fmt3 $p}]
+set x [proj_inv $mga2gda [proj_fwd $gda2ahd [ proj_fwd $mga2gda $x]]]
+puts [lmap p $x {fmt3 $p}]
 
