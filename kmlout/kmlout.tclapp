@@ -1,0 +1,104 @@
+# vim: sts=4 sw=4 tw=80 et ft=tcl:
+
+namespace path [list ::tcl::mathop ::tcl::mathfunc]
+
+package require proj4tcl
+package require tdom
+
+dom createNodeCmd -returnNodeCmd elementNode Document
+dom createNodeCmd -returnNodeCmd elementNode Placemark
+dom createNodeCmd elementNode Style
+dom createNodeCmd elementNode IconStyle
+dom createNodeCmd elementNode LabelStyle
+dom createNodeCmd elementNode Icon
+dom createNodeCmd elementNode scale
+dom createNodeCmd elementNode color
+dom createNodeCmd elementNode StyleMap
+dom createNodeCmd elementNode Pair
+dom createNodeCmd elementNode key
+dom createNodeCmd elementNode styleUrl
+dom createNodeCmd elementNode Point
+dom createNodeCmd elementNode Polygon
+dom createNodeCmd elementNode coordinates
+dom createNodeCmd elementNode name
+dom createNodeCmd elementNode href
+dom createNodeCmd elementNode description
+dom createNodeCmd textNode t 
+dom createNodeCmd cdataNode c
+
+proc fmt {x} {
+    return [format %.1f $x]
+}
+
+proc kmlout { list } {
+
+    set zone 56
+    proj4 create mga "+proj=utm +zone=$zone +south +ellps=GRS80" 
+    proj4 create gda "+proj=latlong +axis=neu +ellps=GRS80" 
+
+    dom createDocument kml doc
+    $doc documentElement root
+    $root appendFromScript { set kmldoc [Document] }
+    $root setAttribute xmlns "http://www.opengis.net/kml/2.2"
+    $kmldoc appendFromScript { 
+        name {t stats}
+        Style id Info {
+            IconStyle {
+                Icon { 
+                    href {
+                        t http://maps.google.com/mapfiles/kml/shapes/info.png
+                    }
+                }
+            }
+        }
+    }
+
+    foreach l $list {
+    
+        lassign [split $l ,] x y z id 
+        lassign [mga to gda [list $x $y 0.0]] lat lon
+       
+        set desc "$id<br>[fmt $x]<br>[fmt $y]<br>[fmt $z]"
+
+        puts $desc
+
+        $kmldoc appendFromScript { 
+            Placemark {
+                name {t $id}
+                styleUrl {t #Info}
+                description {c $desc}
+                Point {coordinates {t [format "%.6f,%.6f,0" $lon $lat]}}
+            }
+        }
+    }
+
+    set file points.kml
+    puts "writing $file ..."
+    set out [open $file w]
+    puts $out "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    puts $out [$doc asXML]
+    close $out	
+   
+    rename  mga ""
+    rename  gda ""
+}        
+
+proc main {csv} {
+
+    set in [open $csv r]
+    while {[gets $in line] >= 0} {
+        lappend lines $line
+    }
+    close $in
+
+    kmlout $lines
+        
+}
+
+set file  202588_Sample_32properties.txt 
+
+main $file
+
+
+# vim: sts=4 sw=4 tw=80 et ft=tcl:
+
