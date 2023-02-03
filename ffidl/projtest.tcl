@@ -199,6 +199,18 @@ puts [lmap p $x {fmt3 $p}]
 puts ""
 
 
+set mga2gda [proj_create_crs_to_crs epsg:7856 epsg:7844]
+set gda2ahd [proj_create_crs_to_crs epsg:7843 epsg:9463]
+set x {502810 6964520 50}
+puts [lmap p $x {fmt3 $p}]
+set x [proj_inv $mga2gda [proj_fwd $gda2ahd [ proj_fwd $mga2gda $x]]]
+puts [lmap p $x {fmt3 $p}]
+
+puts ""
+
+
+set mga2gda [proj_create_crs_to_crs epsg:28356 epsg:4283]
+set gda2ahd [proj_create_crs_to_crs epsg:4939 epsg:9464]
 set x {502810 6964520 50}
 puts [lmap p $x {fmt3 $p}]
 set x [proj_inv $mga2gda [proj_fwd $gda2ahd [ proj_fwd $mga2gda $x]]]
