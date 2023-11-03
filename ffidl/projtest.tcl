@@ -70,7 +70,8 @@ proc dms {x} {
 }
 
 proc dmsstr {d} {
-    format "%.0fd %.0f' %.5f\"" {*}$d
+    format "%.0f° %.0f' %.5f\"" {*}$d
+    # degrees symbol c-K DG in vim see digraphs
 }
 
 proc fmt3 {x} {
