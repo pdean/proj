@@ -1,3 +1,4 @@
+#!/usr/bin/env tclsh
 package provide proj 0.1
 
 package require Ffidl 
