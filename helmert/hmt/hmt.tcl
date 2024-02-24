@@ -68,7 +68,7 @@ proc main {} {
         set YN [expr {$b0+$b1*$x+$a1*$y}]
         set DX [- $XN $X]
         set DY [- $YN $Y]
-        puts [format "%12.3f %14.3f %6.3f %6.3f" $XN $YN $DX $DY]
+        puts [format "%12.4f %14.4f %6.4f %6.4f" $XN $YN $DX $DY]
     }
 
     # scale rotation
