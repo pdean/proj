@@ -9,3 +9,5 @@ pkgIndex.tcl
 *.dll
 *.uuid
 *.kml
+*.las
+*.laz
