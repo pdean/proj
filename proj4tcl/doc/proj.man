@@ -1,0 +1,70 @@
+[manpage_begin proj n 1.0.0]
+[copyright {2009-2024 Peter Dean}]
+[moddesc {tcl math}]
+[titledesc {Projection calculations for tcl}]
+[category gis]
+[require proj]
+
+[description]
+[cmd proj] provides minimal Tcl interface to proj projection library (which must already be installed).
+
+[section Commands]
+[list_begin definitions]
+
+[call [cmd proj] [cmd create] [arg projstring]]
+returns handle
+
+[call [cmd proj] [cmd cr2crs] [arg projstring] [arg projstring]]
+returns handle
+
+[call [cmd proj] [cmd norm] [arg handle]]
+returns a new handle whose axis order is the one expected for visualization purposes. 
+
+[call [cmd proj] [cmd destroy] [arg handle]]
+deallocate handle
+
+[call [cmd proj] [cmd fwd] [arg handle] [arg list]]
+returns tranformed point
+
+[call [cmd proj] [cmd inv] [arg handle] [arg list]]
+returns tranformed point using inverse transformation
+
+[list_end]
+
+[section Examples]
+[example {
+package require proj
+set P [proj crs2crs "EPSG:4326" "+proj=utm +zone=32 +datum=WGS84"]
+set norm [proj norm $P]
+proj destroy $P
+set P $norm
+set a [list 12.0 55.]
+set b [proj fwd $P $a]
+puts [format "easting: %.3f, northing: %.3f" {*}$b]
+set b [proj inv $P $b]
+puts [format "longitude: %g, latitude: %g" {*}$b]
+proj destroy $P
+# end
+
+produces result
+easting: 691875.632, northing: 6098907.825
+longitude: 12, latitude: 55
+(corresponds to first example in quickstart.html)
+}]
+
+
+[section References]
+[list_begin enumerated]
+[enum] PROJ [uri https://proj.org]
+[enum] Quick start for projstrings [uri https://proj.org/usage/quickstart.html] 
+[enum] Projections [uri https://proj.org/operations/projections/index.html] 
+[enum] Quick start for C API usage [uri https://proj.org/development/quickstart.html]
+[enum] Reference [uri https://proj.org/development/reference/index.html]
+[list_end]
+
+[section {Bugs, Todo, etc}]
+[list_begin itemized]
+[item] commands implemented only sufficient to run example.
+[list_end]
+
+[manpage_end]
