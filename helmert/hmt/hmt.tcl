@@ -57,42 +57,37 @@ proc main {} {
     }
 
     # helmert parameters
-    set a1 [/ [+ $xX $yY] [+ $xx $yy]]
-    set b1 [/ [- $xY $yX] [+ $xx $yy]]
-    set a0 [expr {$XM-$a1*$xm+$b1*$ym}]
-    set b0 [expr {$YM-$b1*$xm-$a1*$ym}]
+    set a [/ [+ $xX $yY] [+ $xx $yy]]
+    set b [/ [- $xY $yX] [+ $xx $yy]]
+    set x0 [expr {$XM-$a*$xm+$b*$ym}]
+    set y0 [expr {$YM-$b*$xm-$a*$ym}]
 
     # check residuals
     foreach x $xp y $yp X $XP Y $YP {
-        set XN [expr {$a0+$a1*$x-$b1*$y}]
-        set YN [expr {$b0+$b1*$x+$a1*$y}]
+        set XN [expr {$x0+$a*$x-$b*$y}]
+        set YN [expr {$y0+$b*$x+$a*$y}]
         set DX [- $XN $X]
         set DY [- $YN $Y]
         puts [format "%12.4f %14.4f %6.4f %6.4f" $XN $YN $DX $DY]
     }
 
     # scale rotation
-    set s [hypot $a1 $b1]
-    set t [atan2 $b1 $a1]
+    set s [hypot $a $b]
+    set t [atan2 $b $a]
     set rad2deg [/ 45 [atan 1]]
     set rad2sec [* 3600 $rad2deg]
 
     # proj string
     set S +proj=helmert
     append S " +convention=coordinate_frame"
-    append S " +x=$a0 +y=$b0"
+    append S " +x=$x0 +y=$y0"
     append S " +s=$s +theta=[- [* $t $rad2sec]]"
     puts $S
     puts ""
 
     # hmt
-    puts "$a1,$b1,$xm,$ym,$XM,$YM"
+    puts "$a,$b,$xm,$ym,$XM,$YM"
     puts ""
-
-    # las2las
-    puts "-transform_affine $s,[- [* $t $rad2deg]],$a0,$b0 \
-          -reoffset [format "%.0f %.0f %.0f" $XM $YM 0.0]"
-
 
 
 }
