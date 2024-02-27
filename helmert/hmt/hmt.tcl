@@ -89,6 +89,10 @@ proc main {} {
     puts "$a,$b,$xm,$ym,$XM,$YM"
     puts ""
 
+     # las2las
+#    puts "-transform_affine $s,[- [* $t $rad2deg]],$a0,$b0 \
+          -reoffset [format "%.0f %.0f %.0f" $XM $YM 0.0]"
+
 
 }
 
