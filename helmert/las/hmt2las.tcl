@@ -1,3 +1,4 @@
+#!/bin/env tclsh
 namespace path {::tcl::mathop ::tcl::mathfunc}
 
 proc main {} {
@@ -12,7 +13,7 @@ proc main {} {
     set t [atan2 $b $a]
     set rad2deg [/ 45 [atan 1]]
 
-    puts "-transform_affine $s,[- [* $t $rad2deg]],$x0,$y0
+    puts "-transform_affine $s,[- [* $t $rad2deg]],$x0,$y0"
 }
 
 main
