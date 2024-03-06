@@ -1,0 +1,52 @@
+I am trying to use the transform_affine to convert las files from a local system
+to a utm.  I am not getting anywhere near the numbers I'd expect.  I don't know 
+whether it's a bug or I am greatly misunderstanding the parameters it needs.
+
+I've created a minimal example.  I have 2 points in each coordinate system.
+
+file g.txt
+511354.724 6964890.061 2.182
+511310.075 6964986.011 6.956
+
+file m.txt
+511150.182 6962104.105 2.182
+511105.551 6962200.017 6.956
+
+expressing the helmert transformation as 
+X = a0 + a1*x - b1*y
+Y = b0 + b1*x + a1*y
+I calculated the parameters in a spreadsheet as
+a1 = 0.9996026957
+b1 = -2.71769146406E-06
+a0 = -20.30702
+b0 = -17.3859
+
+scale = hypot(a1,b1) = 0.99960269575
+theta radians = atan2(b1,a1) = -2.7187716E-06
+theta degrees = -1.55774140637E-04
+theta seconds = -5.6078691E-01
+
+I first did a test using cct from the proj library to check the numbers
+cct +proj=helmert +convention=coordinate_frame +x=-20.3070168478 +y=-17.3858693056 +s=0.99960269575 +theta=5.6078691E-01 g.txt
+
+this gives the expected answer
+  511150.1820   6962104.1050        2.1820           inf
+  511105.5510   6962200.0170        6.9560           inf
+
+This is the command I used to test tranform_affine
+las2las64 -i g.txt -iparse xyz \
+    -transform_affine 0.99960269575,-1.55774140637E-04,-20.3070168478,-17.3858693056 \
+    -rescale 0.001 0.001 0.001 -stdout -otxt
+
+and this is the result!
+511131.248 6962105.495 2.182
+511086.617 6962201.407 6.956
+
+It's interesting that the difference between calculated and expected is the same
+for each point
+
+-18.934	1.390
+-18.934	1.390
+
+any ideas anyone?
+
