@@ -1,0 +1,15 @@
+I've found the answer to this.  The rotation is meant to be in seconds not
+degrees.  I used degrees because of this post on google groups. It seems that
+Martin made a typo. I see now it's obvious from the numbers.
+
+https://groups.google.com/g/lastools/c/e1WKDE9V71Q/m/LIRUis7vCQAJ
+
+Here's the corrected test.  The parameters are the same as those in the proj
+string except for the sign of the rotation.
+
+las2las64 -i g.txt -iparse xyz \
+    -transform_affine 0.99960269575,5.6078691E-01,-20.3070168478,-17.3858693056 \
+    -rescale 0.001 0.001 0.001 -stdout -otxt
+
+Perhaps las2las -h could be a little more detailed?
+
